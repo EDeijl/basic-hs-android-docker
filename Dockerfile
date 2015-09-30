@@ -11,7 +11,9 @@ WORKDIR $BASE
 #
 
 USER root
-
+run echo "deb http://ftp.nl.debian.org/debian wheezy main" > /etc/apt/sources.list
+run echo "deb-src http://ftp.nl.debian.org/debian wheezy main" >> /etc/apt/sources.list
+RUN apt-get update
 RUN apt-get install ant openjdk-6-jdk -y
 RUN wget http://dl.google.com/android/android-sdk_r24.2-linux.tgz
 RUN cd .. && tar xzf build/android-sdk_r24.2-linux.tgz
