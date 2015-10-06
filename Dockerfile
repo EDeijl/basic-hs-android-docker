@@ -210,8 +210,11 @@ ADD scripts/clone-CPConsoleApp.sh $BASE/
 RUN ./clone-CPConsoleApp.sh
 
 #
-# Clone android-build-epidemic-apk
+# Clone android-build-CPConsoleApp-apk
 #
 
-ADD scripts/clone-android-build-epidemic-apk.sh $BASE/
-RUN ./clone-android-build-epidemic-apk.sh
+#ADD scripts/clone-android-build-epidemic-apk.sh $BASE/
+#RUN ./clone-android-build-epidemic-apk.sh
+
+ADD scripts/clone-android-build-CPConsoleApp-apk.sh $BASE/
+RUN ./clone-android-build-CPConsoleApp-apk.sh
