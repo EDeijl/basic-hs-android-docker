@@ -1,29 +1,14 @@
-# A `Dockerfile` for provisioning a build environment for Epidemic
+# A `Dockerfile` for provisioning a build environment for Android apps written in Haskell
 
 ## Introduction
-
-[Epidemic](https://github.com/sseefried/open-epidemic-game) is a game about exponential growth
-written in Haskell. (Here's a [demo](https://www.youtube.com/watch?v=PkIhzVGIsxI) on YouTube.)
-
-But building it for mobile devices ain't that easy.
-
-Apart from requiring a [GHC](http://haskell.org/ghc) cross-compiler, you must cross-compile
-various C libraries and then build cross-compiled versions of all the Haskell libraries which,
-unfortunately, doesn't work out of the box for some libraries when installing them with
-[Cabal](https://www.haskell.org/cabal/).
-
-So, with the aid of [Docker](https://www.docker.com) I wrote a script to build a fully
-fledged Android build environment. This builds on earlier work that I did in the
-[`docker-build-ghc-android`](https://github.com/sseefried/docker-build-ghc-android) repo.
-`docker-build-ghc-android` just builds a GHC 7.8.3 cross-compiler targetting ARMv7, while this
-repo builds all the C and Haskell libraries required to build Epidemic.
-
-In conjunction with [`android-build-epidemic-apk`](https://github.com/sseefried/android-build-epidemic-apk)
-you can build an APK for installation on your Android device.
+This repository contains a `Dockerfile` for building a simple HelloWorld written in Haskell for Android.
+The dockerfile is built upon sseefried's [docker-epidemic-build-env](https://github.com/sseefried/docker-epidemic-build-env) but without all the dependencies specific to his game [Epidemic](https://github.com/sseefried/open-epidemic-game).
+It includes a slightly modified version of CJ van den Berg's [android-haskell-activity](https://github.com/neurocyte/android-haskell-act
+ivity), which also runs on iOS devices, it's repository can be found [here](https://github.com/EDeijl/CPCConsoleApp).
 
 ## Installation
 
-Please ensure that you are using at leaast Docker version 1.6. Check with `docker version`.
+Please ensure that you are using at least Docker version 1.6. Check with `docker version`.
 
 ### (Optional) Build `debian-wheezy-ghc-android`
 
@@ -68,9 +53,8 @@ You can simply run an interactive shell and build the APK inside a running conta
 
 
     $ docker run -it epidemic-build-env /bin/bash
-    androidbuilder@283089ad80b9:~/build$ cd android-build-epidemic-apk
-
-Now follow the instructions in the `README.md` [here](https://github.com/sseefried/android-build-epidemic-apk)
+    androidbuilder@283089ad80b9:~/build$ cd CPConsoleApp
+    androidbuilder@283089ad80b9:~/build/CPConsoleApp$ ./build-android.sh
 
 The `adb` tool is not installed in the image so once you have built the APK you will want to
 copy the APK to your local machine (which presumably has `adb` installed in it).
@@ -86,59 +70,8 @@ You'll get something like:
 
 This will give you a container ID (`d4a82703a3a9` or `dreamy_ptolemy` here).
 
-     $ docker cp dreamy_ptolemy:/home/androidbuilder/build/android-build-epidemic-apk/bin/com.declarative.games.epidemic.beta-debug.apk .
+     $ docker cp dreamy_ptolemy:/home/androidbuilder/build/CPConsoleApp/bin/CPConsoleApp-debug.apk .
 
 You can now install this APK with
 
-     $ adb install -r com.declarative.games.epidemic.beta-debug.apk
-
-### Option B: Share a local directory, build, and install
-
-Another option to is checkout [`android-build-epidemic-apk`](https://github.com/sseefried/android-build-epidemic-apk)
-locally and then *share* this directory with a running container.
-
-    $ git clone https://github.com/sseefried/android-build-epidemic-apk
-    $ docker run -v /local/path/to/android-build-epidemic-apk:/home/androidbuilder/build/android-build-epidemic-apk -it epidemic-build-env /bin/bash
-
-(This will overwrite the directory in the Docker container.)
-
-Now, inside the interactive shell in the running container, follow the instructions in the
-`README.md` [here](https://github.com/sseefried/android-build-epidemic-apk)
-
-Once you are done the APK will be in `/local/path/to/android-build-epidemic-apk/bin`, and
-you can install it with:
-
-     $ adb install -r com.declarative.games.epidemic.beta-debug.apk
-
-## Want to help beta test the game?
-
-Actually, the version of the game I've released will not be the final version. If you'd like
-to stay in the loop then [subscribe](http://eepurl.com/boW1vz) here.
-
-
-## Guiding principles of the Dockerfile
-
-Here I outline some of the guiding principles behind the design of the `Dockerfile`.
-
-* Download specific versions of libraries. Check them against a SHA1 hash.
-* `cabal install` specific versions of libraries
-* `git clone` specific commits of repositories
-
-This way we increase the likelihood that Docker will complete the build into the future.
-
-### Why so many small scripts?
-
-I call these *scriptlets*. Apart from logically structuring the `Dockerfile` so that each library is
-built in isolation, this also means I can take advantage of Docker's cache which is a form of
-filesystem checkpointing. See a blog
-[post](http://lambdalog.seanseefried.com/posts/2014-12-12-docker-build-scripts.html) I wrote on
-this. Also see the next question.
-
-### Why do you `ADD` a script just before `RUN`ning it?
-
-This made developing this build script that much easier. While developing a specific *scriptlet* I
-didn't want to have to build from the beginning each time I made a small change. Docker's caching of
-sub-images meant that I could start building again from the point where a scriptlet changed and know
-with 100% certainty that the filesystem was in *exactly* the same state it was the last time I tried
-to build from that point. As a consequence the structure of "adding just before running" also makes this
-`Dockerfile` more maintainable.
+     $ adb install -r CPConsoleApp-debug.apk
