@@ -206,6 +206,20 @@ RUN ./build-OpenGLRaw.sh
 # Clone Console App
 #
 
+#
+# Clone foreign-jni
+#
+
+ADD scripts/clone-foreignjni.sh $BASE/
+RUN ./clone-foreignjni.sh
+
+#
+# Build foreign-jni
+#
+
+ADD scripts/build-foreign-jni.sh $BASE/
+RUN ./build-foreign-jni.sh
+
 ADD scripts/clone-CPConsoleApp.sh $BASE/
 RUN ./clone-CPConsoleApp.sh
 
