@@ -3,8 +3,7 @@
 ## Introduction
 This repository contains a `Dockerfile` for building a simple HelloWorld written in Haskell for Android.
 The dockerfile is built upon sseefried's [docker-epidemic-build-env](https://github.com/sseefried/docker-epidemic-build-env) but without all the dependencies specific to his game [Epidemic](https://github.com/sseefried/open-epidemic-game).
-It includes a slightly modified version of CJ van den Berg's [android-haskell-activity](https://github.com/neurocyte/android-haskell-act
-ivity), which also runs on iOS devices, it's repository can be found [here](https://github.com/EDeijl/CPCConsoleApp).
+It includes a slightly modified version of CJ van den Berg's [android-haskell-activity](https://github.com/neurocyte/android-haskell-activity), which also runs on iOS devices, it's repository can be found [here](https://github.com/EDeijl/CPCConsoleApp).
 
 ## Installation
 
